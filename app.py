@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Created by Flynn on 2018-08-29 18:12
+
 from flask import Flask, Blueprint
 from flask_restful import Api
 from flask_uploads import patch_request_class, configure_uploads
@@ -8,9 +12,9 @@ from upload.views import bp,photos
 
 from config import config
 
-def create_app(env):
+def create_app(envv):
     app = Flask(__name__)
-    app.config.from_object(config[env])
+    app.config.from_object(config[envv])
 
     api_bp = Blueprint('api', __name__)
     api = Api(api_bp)
