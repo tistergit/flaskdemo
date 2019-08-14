@@ -53,7 +53,7 @@
                       'Content-Type': 'application/json',
                       'Access-Control-Allow-Origin': '*'}}
         console.log(this.fileList)
-        axios.post('/upload2/mkdocs',{'file':this.fileList2 , 'doc_version': this.form.doc_version} , config)
+        axios.post('/upload2/mkdocs',{'upload_files':this.fileList2 , 'doc_version': this.form.doc_version} , config)
       },
       handleRemove(file, fileList) {
         console.log(file, fileList);
@@ -68,11 +68,10 @@
         return this.$confirm(`确定移除 ${file.name}？`);
       },
       handleSuccess(res, file, fileList){
-        debugger
-        console.log('图片上传成功,文件名：' + res.filename)
+        console.log('图片上传成功,文件名：' + res.upload_file)
         console.log(fileList)
         console.log(this.fileList)
-        this.fileList2.push(res.filename)
+        this.fileList2.push(res.upload_file)
       }
     }
 
