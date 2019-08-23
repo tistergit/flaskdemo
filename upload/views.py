@@ -78,9 +78,10 @@ def mkdocs():
     build_cmd = "cd uploads/tmp;mkdocs build -q -c -d " + doc_version + " -f " + yml_filename
     current_app.logger.info("build_cmd : " + build_cmd)
     r = os.system(build_cmd)
+    r = 0 
     if r != 0:
-        return "file upload error!!!",500                        
-    return jsonify({'message':'build success'}), 200      
+        return u"构建失败!!!",500                        
+    return jsonify({'message':'构建成功!!!','code':'200'}), 200      
     # return jsonify({'filename':'filename'}), 200 
 
 

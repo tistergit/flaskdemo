@@ -9,23 +9,28 @@
 
 <body>
   <div id="app">
-      <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="目标版本">
-            <el-input v-model="form.doc_version"></el-input>
-          </el-form-item>
-          
+    
+    <el-form ref="form" :model="form" label-width="80px">
+      <el-form-item label="目标版本">
+        <el-input v-model="form.doc_version"></el-input>
+      </el-form-item>
 
-          <el-upload class="upload-demo" action="/upload2/file_upload" :on-preview="handlePreview" :on-remove="handleRemove"
-          :before-remove="beforeRemove" multiple :limit="3" :on-exceed="handleExceed" :file-list="fileList" :on-success="handleSuccess">
-          <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-        </el-upload>
 
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">立即创建</el-button>
-            <el-button>取消</el-button>
-          </el-form-item>
-        </el-form>
+      <el-upload class="upload-demo" action="/upload2/file_upload" :on-preview="handlePreview" :on-remove="handleRemove"
+        :before-remove="beforeRemove" multiple :limit="3" :on-exceed="handleExceed" :file-list="fileList"
+        :on-success="handleSuccess">
+        <el-button size="small" type="primary">点击上传</el-button>
+        <div slot="tip" class="el-upload__tip">需要上传zip文件和mkdocs.yml文件</div>
+      </el-upload>
+
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+        <el-button>取消</el-button>
+      </el-form-item>
+      <div>
+          <p>文档构建结果： {{ greeting }}</p>
+        </div>
+    </el-form>
 
   </div>
 </body>
@@ -40,7 +45,8 @@
     data() {
       return {
         fileList: [],
-        fileList2:[],
+        fileList2: [],
+        greeting: '未构建',
         form: {
           doc_version: '',
         },
@@ -49,11 +55,23 @@
     methods: {
       onSubmit() {
         console.log('submit!')
-        var config = { headers: {  
-                      'Content-Type': 'application/json',
-                      'Access-Control-Allow-Origin': '*'}}
+        this.greeting = "构建中,请稍等"
+        var config = {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          }
+        }
         console.log(this.fileList)
-        axios.post('/upload2/mkdocs',{'upload_files':this.fileList2 , 'doc_version': this.form.doc_version} , config)
+        let self=this;
+        axios.post('/upload2/mkdocs',
+          {
+            'upload_files': this.fileList2, 'doc_version': this.form.doc_version
+          }, config).then(
+            (response)=>{this.greeting = response.data.message}
+          )
+        console.log(this.greeting)
+
       },
       handleRemove(file, fileList) {
         console.log(file, fileList);
@@ -67,7 +85,7 @@
       beforeRemove(file, fileList) {
         return this.$confirm(`确定移除 ${file.name}？`);
       },
-      handleSuccess(res, file, fileList){
+      handleSuccess(res, file, fileList) {
         console.log('图片上传成功,文件名：' + res.upload_file)
         console.log(fileList)
         console.log(this.fileList)

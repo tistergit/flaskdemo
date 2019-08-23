@@ -25,6 +25,12 @@ def create_app(envv):
     app.register_blueprint(bp , url_prefix="/upload2")
     configure_uploads(app, photos)
     patch_request_class(app)
+    app.jinja_env.block_start_string = '(%'  # 修改块开始符号
+    app.jinja_env.block_end_string = '%)'  # 修改块结束符号
+    app.jinja_env.variable_start_string = '(('  # 修改变量开始符号
+    app.jinja_env.variable_end_string = '))'  # 修改变量结束符号
+    app.jinja_env.comment_start_string = '(#'  # 修改注释开始符号
+    app.jinja_env.comment_end_string = '#)'  # 修改注释结束符号
     return app
 
 if __name__ == '__main__':
