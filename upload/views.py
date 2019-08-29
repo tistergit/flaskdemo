@@ -14,14 +14,12 @@ import os
 from pathlib import Path
 import zipfile,shutil
 
-
 bp = Blueprint('upload', __name__, url_prefix='/upload2/')
 
 # photos是UploadSet的名字，这个名字将在配置中使用
 # 第二个参数表示可上传文件类型，例如TEXT,DOCUMENTS,IMAGES
 #photos = UploadSet('photos',extensions=('txt', 'rtf', 'odf', 'ods', 'gnumeric', 'abw', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'jpe', 'jpeg', 'png', 'gif', 'svg', 'bmp', 'csv', 'ini', 'json', 'plist', 'xml', 'yaml', 'yml' , 'pdf','md','zip'))
 photos = UploadSet('photos',DEFAULTS + ARCHIVES)
-
 
 
 @bp.route('/file_upload', methods=['POST', 'GET'])
@@ -44,8 +42,8 @@ def file_upload():
 @bp.route('/mkdocs', methods=['POST', 'GET'])
 def mkdocs():
     current_app.logger.info("values : " + str(request.json))
-    p = Path("uploads/tmp/")
-    p.mkdir(exist_ok=True)
+    #p = Path("uploads/tmp/")
+    #p.mkdir(exist_ok=True)
     data = request.get_json()
     current_app.logger.info("data : " + str(data))
     upload_files = data["upload_files"]
@@ -75,11 +73,12 @@ def mkdocs():
                         shutil.copyfileobj(origin_file, output_file)  # 将原文件内容复制到新文件
     from shutil import copyfile
     copyfile("uploads/" + yml_filename, "uploads/tmp/" + yml_filename)
-    build_cmd = "cd uploads/tmp;mkdocs build -q -c -d " + doc_version + " -f " + yml_filename
+    build_cmd = "cd uploads/tmp;mkdocs build -q -c -d " + doc_version + " -f " + yml_filename 
+    build_cmd2 = "mv uploads/tmp/" + doc_version + " /data/site"
     current_app.logger.info("build_cmd : " + build_cmd)
     r = os.system(build_cmd)
-    r = 0 
-    if r != 0:
+    r2 = os.system(build_cmd2)
+    if r != 0 or r2 !=0 :
         return u"构建失败!!!",500                        
     return jsonify({'message':'构建成功!!!','code':'200'}), 200      
     # return jsonify({'filename':'filename'}), 200 

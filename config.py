@@ -3,6 +3,10 @@ class Config(object):
   TESTING = False
   DATABASE_NAME = "papers"
   UPLOADED_PHOTOS_DEST = 'uploads'
+  BASIC_AUTH_USERNAME = 'john'
+  BASIC_AUTH_PASSWORD = 'matrix'
+  BASIC_AUTH_FORCE = True
+
  
 
 class DevelopmentConfig(Config):

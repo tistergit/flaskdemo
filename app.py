@@ -6,11 +6,13 @@ from flask import Flask, Blueprint
 from flask_restful import Api
 from flask_uploads import patch_request_class, configure_uploads
 
+from flask_basicauth import BasicAuth
 
 from upload.views import bp,photos
 
 
 from config import config
+
 
 def create_app(envv):
     app = Flask(__name__)
@@ -25,6 +27,10 @@ def create_app(envv):
     app.register_blueprint(bp , url_prefix="/upload2")
     configure_uploads(app, photos)
     patch_request_class(app)
+    ##basic auth
+
+    basic_auth = BasicAuth(app)
+
     app.jinja_env.block_start_string = '(%'  # 修改块开始符号
     app.jinja_env.block_end_string = '%)'  # 修改块结束符号
     app.jinja_env.variable_start_string = '(('  # 修改变量开始符号
